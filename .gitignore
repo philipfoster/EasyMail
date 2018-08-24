@@ -1,0 +1,6 @@
+# IDE-Specific files
+.idea/
+EasyMail.iml
+
+# Python virtual environment
+env/
