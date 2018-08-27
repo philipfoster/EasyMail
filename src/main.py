@@ -3,7 +3,11 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
+from validate_email import validate_email
+
+from src import InvalidUsage
+from src.InvalidUsage import InvalidUsage
 
 app = Flask(__name__)
 
@@ -18,6 +22,7 @@ config = {
     'receipt-body': 'Your message has been sent to Philip. He will respond shortly. \n\n\nYour message:\n %s'
 }
 
+
 #
 # @app.route("/")
 # def test():
@@ -29,6 +34,9 @@ def send_mail():
     name = request.form.get('name')
     from_addr = request.form.get('email')
     title = "Contact Me message from %s" % name
+
+    if not verifyEmail(from_addr):
+        raise InvalidUsage(message="Not a real email address", status_code=400)
 
     # Connect to SMTP server
     server = smtplib.SMTP(config['smtp_server'], config['smtp_port'])
@@ -79,5 +87,17 @@ def sendReceipt(sender, msg, server_client):
     pass
 
 
+def verifyEmail(email):
+    return validate_email(email, check_mx=True)
+
+
+@app.errorhandler(InvalidUsage)
+def handle_errors(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+
 if __name__ == '__main__':
     app.run(debug=False, port=5000, host='0.0.0.0')
+
