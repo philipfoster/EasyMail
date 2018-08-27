@@ -4,3 +4,5 @@ EasyMail.iml
 
 # Python virtual environment
 env/
+
+*.pyc
