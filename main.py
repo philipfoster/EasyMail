@@ -13,7 +13,7 @@ config = {
     'useTls': True,
     'sendReceipt': True,
     'recipient': 'philip@pfoster.me',
-    'password': 'asdf',  # os.environ.get('email_password'),
+    'password': os.environ.get('email_password'),
     'receipt-subject': 'Thanks for reaching out!',
     'receipt-body': 'Your message has been sent to Philip. He will respond shortly. \n\n\nYour message:\n %s'
 }
@@ -23,6 +23,19 @@ config = {
 # @app.route("/")
 # def test():
 #     return 'hello world'
+
+class InvalidUsage(Exception):
+
+    def __init__(self, message, status_code):
+        Exception.__init__(self)
+        self.message = message
+        self.status_code = status_code
+
+    def to_dict(self):
+        rv = dict()
+        rv['message'] = self.message
+        rv['status_code'] = self.status_code
+        return rv
 
 
 @app.route("/sendmail", methods=['POST'])
@@ -99,15 +112,3 @@ if __name__ == '__main__':
     app.run(debug=False, port=5000, host='0.0.0.0')
 
 
-class InvalidUsage(Exception):
-
-    def __init__(self, message, status_code):
-        Exception.__init__(self)
-        self.message = message
-        self.status_code = status_code
-
-    def to_dict(self):
-        rv = dict()
-        rv['message'] = self.message
-        rv['status_code'] = self.status_code
-        return rv
