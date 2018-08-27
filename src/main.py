@@ -27,7 +27,7 @@ config = {
 @app.route("/sendmail", methods=['POST'])
 def send_mail():
     name = request.form.get('name')
-    from_addr = request.form.get('from')
+    from_addr = request.form.get('email')
     title = "Contact Me message from %s" % name
 
     # Connect to SMTP server
