@@ -5,8 +5,6 @@ from email.mime.text import MIMEText
 from flask import Flask, request, jsonify
 from validate_email import validate_email
 
-import InvalidUsage
-
 app = Flask(__name__)
 
 config = {
@@ -99,3 +97,17 @@ def handle_errors(error):
 
 if __name__ == '__main__':
     app.run(debug=False, port=5000, host='0.0.0.0')
+
+
+class InvalidUsage(Exception):
+
+    def __init__(self, message, status_code):
+        Exception.__init__(self)
+        self.message = message
+        self.status_code = status_code
+
+    def to_dict(self):
+        rv = dict()
+        rv['message'] = self.message
+        rv['status_code'] = self.status_code
+        return rv
