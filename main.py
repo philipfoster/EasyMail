@@ -5,6 +5,8 @@ from email.mime.text import MIMEText
 from flask import Flask, request, jsonify
 from validate_email import validate_email
 
+import InvalidUsage
+
 app = Flask(__name__)
 
 config = {
